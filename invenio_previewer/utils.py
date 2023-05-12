@@ -29,7 +29,11 @@ def detect_encoding(fp, default=None):
         result = cchardet.detect(sample)
         threshold = current_app.config.get('PREVIEWER_CHARDET_CONFIDENCE', 0.9)
         if result.get('confidence', 0) > threshold:
-            return result.get('encoding', default)
+            encoding = result.get('encoding', default)
+            if encoding == 'ASCII':
+                # if ascii, override to default (usually utf8) in case of unicode beyond checked range
+                encoding = default
+            return encoding
         else:
             return default
     except Exception:
