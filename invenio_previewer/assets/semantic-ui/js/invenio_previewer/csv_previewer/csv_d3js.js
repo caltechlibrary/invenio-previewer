@@ -21,6 +21,8 @@ function CSV_D3JS() {
         "table-hover": true,
         "table-bordered": true,
       });
+    table.style("border", "1px black solid");
+
     CSV_D3JS.thead = table.append("thead");
     CSV_D3JS.tbody = table.append("tbody");
     CSV_D3JS.columns = columns;
@@ -35,7 +37,11 @@ function CSV_D3JS() {
       .append("th")
       .text(function(column) {
         return column;
-      });
+      })
+      .style("border", "1px black solid")
+      .style("padding", "8px")
+      .style("background-color", "lightgray")
+      .style("font-weight", "bold");
 
     CSV_D3JS.next = 1;
     CSV_D3JS.chunk_size = 500;
@@ -61,6 +67,12 @@ function CSV_D3JS() {
         .data(CSV_D3JS.data.slice(0, CSV_D3JS.next * CSV_D3JS.chunk_size))
         .enter()
         .append("tr")
+        .on("mouseover", function(){
+           d3.select(this).style("background-color", "rgb(221, 221, 221)");
+        })
+        .on("mouseout", function(){
+           d3.select(this).style("background-color", "white");
+        })
         .selectAll("td")
         .data(function(row) {
           return CSV_D3JS.columns.map(function(column) {
@@ -71,7 +83,9 @@ function CSV_D3JS() {
         .append("td")
         .text(function(d) {
           return d.value;
-        });
+        })
+        .style("border", "1px black solid")
+        .style("padding", "8px");
 
       if (CSV_D3JS.next === CSV_D3JS.chunks) {
         CSV_D3JS.trigger(document, "hideLoader", {
